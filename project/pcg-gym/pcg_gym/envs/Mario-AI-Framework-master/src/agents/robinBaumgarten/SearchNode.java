@@ -15,6 +15,7 @@ public class SearchNode {
     public int distanceFromOrigin = 0;
     public boolean hasBeenHurt = false;
     public boolean isInVisitedList = false;
+    public boolean check = false;
 
     boolean[] action;
     int repetitions = 1;
@@ -98,6 +99,71 @@ public class SearchNode {
         float s0 = initialSpeed;
         return (float) (99.17355373 * Math.pow(0.89, y + 1) - 9.090909091 * s0 * Math.pow(0.89, y + 1) + 10.90909091 * y
                 - 88.26446282 + 9.090909091 * s0);
+    }
+
+    public float getRemainingTimeRatio() {
+        return 1 - getRemainingTime() / 2500f;
+    }
+
+    public int getkilled() {
+        if (this.sceneSnapshot == null) {
+            return 0;
+        }
+        return this.sceneSnapshot.getKillsTotal();
+    }
+
+    public float getkillrate() {
+        if (this.sceneSnapshot == null) {
+            return 0;
+        }
+        if(this.sceneSnapshot.getTotalEnemies() == 0){
+            return 0;
+        }
+        return (float) this.sceneSnapshot.getKillsTotal()/ (float) this.sceneSnapshot.getTotalEnemies();
+    }
+
+    public int getTotalEnemies() {
+        if (this.sceneSnapshot == null) {
+            return 0;
+        }
+        return this.sceneSnapshot.getTotalEnemies();
+    }
+
+    public float getCollectRate() {
+        if (this.sceneSnapshot == null) {
+            return 0;
+        }
+        if(this.sceneSnapshot.getTotalCoins() == 0){
+            return 0;
+        }
+        return (float)this.sceneSnapshot.getNumCollectedCoins()/(float) this.sceneSnapshot.getTotalCoins();
+    }
+
+    public float getJumpTimeRatio() {
+        if (this.sceneSnapshot == null) {
+            return 0;
+        }
+        return this.sceneSnapshot.getJumpTimeRatio();
+    }
+
+    public int ifWin() {
+        if (this.sceneSnapshot == null) {
+            return 0;
+        }
+        if(this.sceneSnapshot.getGameStatus() == GameStatus.WIN){
+            return 1;
+        }
+        return 0;
+    }
+
+    public int ifLose() {
+        if (this.sceneSnapshot == null) {
+            return 0;
+        }
+        if(this.sceneSnapshot.getGameStatus() == GameStatus.LOSE){
+            return 1;
+        }
+        return 0;
     }
 
 }

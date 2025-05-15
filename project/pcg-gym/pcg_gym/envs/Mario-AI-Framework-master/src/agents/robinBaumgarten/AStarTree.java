@@ -14,8 +14,19 @@ public class AStarTree {
     ArrayList<int[]> visitedStates = new ArrayList<int[]>();
     private boolean requireReplanning = false;
 
+    //추가가
+    private float killWeight = 3;
+    private float collectWeight = 3;
+    private float jumpWeight = 3;
+    private float timeWeight = -3;
+    private float winWeight = -10;
+    private float loseWeight = 10;
+
     private ArrayList<boolean[]> currentActionPlan;
     int ticksBeforeReplanning = 0;
+    //추가
+    public int SearchedStates = 0;
+    public int SearchedLose = 0;
 
     private MarioForwardModel search(MarioTimer timer) {
         SearchNode current = bestPosition;
@@ -30,7 +41,8 @@ public class AStarTree {
             }
             currentGood = false;
             float realRemainingTime = current.simulatePos();
-
+            //추가
+            SearchedStates++;
             if (realRemainingTime < 0) {
                 continue;
             } else if (!current.isInVisitedList && isInVisited((int) current.sceneSnapshot.getMarioFloatPos()[0],
@@ -70,7 +82,12 @@ public class AStarTree {
 
         posPool = new ArrayList<SearchNode>();
         visitedStates.clear();
-        posPool.addAll(startPos.generateChildren());
+        //posPool.addAll(startPos.generateChildren());
+        ArrayList<SearchNode> tempPool = startPos.generateChildren();
+
+        SearchedStates += tempPool.size();
+
+        posPool.addAll(tempPool);
         currentSearchStartingMarioXPos = model.getMarioFloatPos()[0];
 
         bestPosition = startPos;
@@ -104,7 +121,25 @@ public class AStarTree {
         SearchNode bestPos = null;
         float bestPosCost = 10000000;
         for (SearchNode current : posPool) {
-            float currentCost = current.getRemainingTime() + current.timeElapsed * 0.90f; // slightly bias towards furthest positions
+            //float currentCost = current.getRemainingTime() + current.timeElapsed * 0.90f; // slightly bias towards furthest positions
+            // if (currentCost < bestPosCost) {
+            //     bestPos = current;
+            //     bestPosCost = currentCost;
+            // }
+            if(!current.check){
+                current.check = true;
+                SearchedStates++;
+                if(current.ifLose() == 1){
+                    SearchedLose++;
+                }
+            }
+            float currentCost = killWeight * current.getkillrate() 
+            + collectWeight * current.getCollectRate() 
+            + jumpWeight * current.getJumpTimeRatio() 
+            + timeWeight * current.getRemainingTimeRatio() 
+            + winWeight * current.ifWin() 
+            + loseWeight * current.ifLose();
+            //System.out.println("Mario killed: " + current.getkilled() + " CurrentCost: "+ currentCost);
             if (currentCost < bestPosCost) {
                 bestPos = current;
                 bestPosCost = currentCost;

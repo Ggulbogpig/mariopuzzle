@@ -216,6 +216,12 @@ public class MarioForwardModel {
     private int flowers;
     private int breakBlock;
 
+    private int destroyedQuestionBlocks = 0;
+    private int totalBlockCount = -1;
+    private int cumulativeJumpTime = 0;
+    private boolean wasJumping = false;
+    private int totalFrames = 0;
+
     /**
      * Create a forward model object
      *
@@ -276,6 +282,10 @@ public class MarioForwardModel {
                 this.breakBlock += 1;
             }
         }
+
+        this.totalFrames++;
+        trackJumpTime();
+        
     }
 
     /**
@@ -397,6 +407,38 @@ public class MarioForwardModel {
      *
      * @return number of enemies killed in the game
      */
+
+     //적 수 세는 함수 추가
+     public int getTotalEnemies(){
+
+        return this.world.level.totalEnemies;
+     }
+
+     //코인 수 세는 함수 추가
+     public int getTotalCoins() {
+        return this.world.level.totalCoins;
+    }
+    private void trackJumpTime() {
+        if (this.world.mario.jumpTime > 0) {
+            cumulativeJumpTime++;
+            wasJumping = true;
+        } else if (wasJumping) {
+            wasJumping = false;
+        }
+    }
+    
+    public int getCumulativeJumpTime() {
+        return this.cumulativeJumpTime;
+    }
+
+    //점프 시간 비율 계산하는 함수 추가
+    public float getJumpTimeRatio() {
+        if (totalFrames == 0) return 0f;
+        return (float) cumulativeJumpTime / totalFrames;
+    }
+
+
+
     public int getKillsTotal() {
         return this.fallKill + this.fireKill + this.shellKill + this.stompKill;
     }

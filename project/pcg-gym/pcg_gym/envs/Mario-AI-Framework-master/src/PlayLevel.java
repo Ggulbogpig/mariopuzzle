@@ -37,16 +37,25 @@ public class PlayLevel {
         MarioGame game = new MarioGame();
         new agents.robinBaumgarten.Agent();
         int cnt = 0;
-        for(int i=0; i<5; i++){
-            MarioResult result = game.runGame(new agents.robinBaumgarten.Agent(), getLevel("./levels/GAN/"+String.valueOf(i)+".txt"), 20, 0, false);
+
+        // MarioResult result = game.runGame(new agents.robinBaumgarten.Agent(), getLevel("C:/Users/hbsss/OneDrive/Documents/게임캡스톤디자인/MarioPuzzle/mariopuzzle/project/pcg-gym/pcg_gym/envs/Mario-AI-Framework-master/levels/GAN/"+String.valueOf(0)+".txt"), 20, 0, true);
+        //              System.out.println("Level"+1);
+        //              printResults(result);
+        // // //            if (result.getCompletionPercentage()<1.0){
+        // // //                System.out.printf("%d: %f\n",i,result.getCompletionPercentage());
+        // // //            }
+
+
+        for(int i=1; i<6; i++){
+            MarioResult result = game.runGame(new agents.robinBaumgarten.Agent(), getLevel("C:\\Users\\hbsss\\OneDrive\\Documents\\게임캡스톤디자인\\MarioPuzzle\\mariopuzzle\\project\\pcg-gym\\pcg_gym\\envs\\Mario-AI-Framework-master\\levels\\GAN\\lvl-"+String.valueOf(i)+".txt"), 20, 0, true);
             System.out.println("Level"+i);
             printResults(result);
 //            if (result.getCompletionPercentage()<1.0){
 //                System.out.printf("%d: %f\n",i,result.getCompletionPercentage());
 //            }
 
-        }
+//         }
         //printResults(game.playGame(getLevel("../levels/original/lvl-1.txt"), 200, 0));
        // printResults(game.runGame(new agents.robinBaumgarten.Agent(), getLevel("./levels/GAN/1.txt"), 20, 0, true));
     }
-}
+} }
